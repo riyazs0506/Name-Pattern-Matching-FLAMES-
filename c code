@@ -1,0 +1,114 @@
+#include <stdio.h>
+#include <string.h>
+#include <ctype.h>
+
+// Function to remove spaces from a string
+void removeSpaces(char *str) {
+    int count = 0;
+    for (int i = 0; str[i]; i++) {
+        if (str[i] != ' ')
+            str[count++] = str[i];
+    }
+    str[count] = '\0';
+}
+
+// Function to convert string to lowercase
+void toLower(char *str) {
+    for (int i = 0; str[i]; i++) {
+        str[i] = tolower(str[i]);
+    }
+}
+
+// Function to count the number of occurrences of a character in a string
+int countOccurrences(char *str, char ch) {
+    int count = 0;
+    for (int i = 0; str[i]; i++) {
+        if (str[i] == ch)
+            count++;
+    }
+    return count;
+}
+
+// Function to find the FLAMES result
+char findFLAMESResult(char *name1, char *name2) {
+    int len1 = strlen(name1);
+    int len2 = strlen(name2);
+
+    // Convert names to lowercase and remove spaces
+    toLower(name1);
+    toLower(name2);
+    removeSpaces(name1);
+    removeSpaces(name2);
+
+    // Count the number of common letters
+    int commonCount = 0;
+    for (int i = 0; name1[i]; i++) {
+        for (int j = 0; name2[j]; j++) {
+            if (name1[i] == name2[j]) {
+                commonCount += 2;
+                name2[j] = ' '; // Mark the character as used
+                break;
+            }
+        }
+    }
+
+    // Calculate the remaining count after removing common letters
+    int remainingCount = (len1 + len2) - commonCount;
+
+    // Calculate the index of the result in "FLAMES"
+    int index = remainingCount % 6;
+
+    // Corresponding result in FLAMES
+    char result;
+    switch (index) {
+        case 1:
+            result = 'F'; break;
+        case 2:
+            result = 'L'; break;
+        case 3:
+            result = 'A'; break;
+        case 4:
+            result = 'M'; break;
+        case 5:
+            result = 'E'; break;
+        default:
+            result = 'S'; break;
+    }
+
+    return result;
+}
+
+int main() {
+    char name1[100], name2[100];
+   
+    printf("Enter name 1: ");
+    fgets(name1, sizeof(name1), stdin);
+    printf("Enter name 2: ");
+    fgets(name2, sizeof(name2), stdin);
+   
+    // Remove newline characters from names
+    name1[strcspn(name1, "\n")] = '\0';
+    name2[strcspn(name2, "\n")] = '\0';
+   
+    char result = findFLAMESResult(name1, name2);
+   
+    printf("Relationship between %s and %s: ", name1, name2);
+    switch(result) {
+        case 'F':
+            printf("Friendship\n"); break;
+        case 'L':
+            printf("Love\n"); break;
+        case 'A':
+            printf("Affection\n"); break;
+        case 'M':
+            printf("Marriage\n"); break;
+        case 'E':
+            printf("Enmity\n"); break;
+        case 'S':
+            printf("Sibling\n"); break;
+        default:
+            printf("Undefined\n"); break;
+    }
+
+    return 0;
+}
